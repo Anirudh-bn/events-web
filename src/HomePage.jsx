@@ -278,7 +278,7 @@ export default function HomePage() {
         >
           <div className="h-96 md:h-[500px] rounded-sm relative overflow-hidden shadow-lg">
             <img
-              src="https://images.unsplash.com/photo-1596232492549-354368342458?w=800&q=80"
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80"
               alt="Luxurious outdoor Indian wedding venue setup"
               className="w-full h-full object-cover"
             />
