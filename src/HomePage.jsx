@@ -17,7 +17,7 @@ export default function HomePage() {
       <header className="w-full flex items-center justify-between py-6 px-6 md:px-16 bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-[#f5e6e0]">
         <div className="flex items-center gap-3">
           <div className="font-serif text-2xl md:text-3xl italic text-[#2d2d2d] tracking-wide">
-            Belle Weddings
+            Vowza
           </div>
         </div>
 
@@ -82,10 +82,10 @@ export default function HomePage() {
 
           <div className="relative text-center max-w-4xl mx-auto z-10">
             <h1 className="font-serif text-5xl md:text-7xl mb-4 text-[#2d2d2d] italic leading-tight">
-              Belle Weddings
+              Vowza
             </h1>
             <p className="text-lg md:text-xl mb-8 text-[#5d5d5d] font-light tracking-wide">
-              Bespoke Wedding Planner
+              Premier Event Creators
             </p>
             <button
               onClick={() => navigate("/questionnaire")}
@@ -120,8 +120,8 @@ export default function HomePage() {
               Services
             </h2>
             <p className="text-base md:text-lg text-[#5d5d5d] font-light leading-relaxed mb-6">
-              From intimate ceremonies to grand celebrations, we craft bespoke
-              wedding experiences tailored to your unique love story. Our
+              From intimate ceremonies to grand celebrations, we craft high-energy, unforgettable experiences
+              tailored to your unique love story. Our
               comprehensive planning services ensure every detail reflects your
               vision, allowing you to savor each moment of your special day.
             </p>
@@ -242,7 +242,7 @@ export default function HomePage() {
                 Receive Your Plan
               </h3>
               <p className="text-sm text-[#5d5d5d] font-light leading-relaxed">
-                We curate a bespoke plan with venue options, decor styles, and
+                We curate a dynamic plan with venue options, decor styles, and
                 trusted Hyderabad vendors tailored to your requirements.
               </p>
             </div>
@@ -353,7 +353,7 @@ export default function HomePage() {
             </h2>
             <blockquote className="mb-6">
               <p className="text-base md:text-lg text-[#5d5d5d] font-light leading-relaxed mb-4">
-                "I would recommend Belle Weddings to anyone looking to have a
+                "I would recommend Vowza to anyone looking to have a
                 beautiful and happy wedding. They made our dream day come true
                 without any stress."
               </p>
@@ -454,15 +454,15 @@ export default function HomePage() {
       >
         <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto text-sm font-light text-[#5d5d5d]">
           <div>
-            <p className="mb-1">500 Jubilee Hills Road</p>
+            <p className="mb-1">Jubilee Hills</p>
             <p>Hyderabad, TG 500033</p>
           </div>
           <div>
             <p className="mb-1">Tel: 040-1234-5678</p>
-            <p>Email: info@belleweddings.com</p>
+            <p>Email: info@vowza.in</p>
           </div>
           <div>
-            <p className="mb-4">© 2025 by Belle Weddings.</p>
+            <p className="mb-4">© 2025 by Vowza.</p>
           </div>
         </div>
 

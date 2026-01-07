@@ -225,7 +225,7 @@ export default function QuestionnaireForm() {
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
         >
           <div className="font-serif text-2xl md:text-3xl italic text-[#2d2d2d] tracking-wide">
-            Belle Weddings
+            Vowza
           </div>
         </button>
         <button
