@@ -154,8 +154,8 @@ export default function QuestionnaireForm() {
     setSubmitError(null);
 
     try {
-      // Insert into Supabase
-      const { data, error } = await supabase
+      // 🟢 THE FIX: Removed .select() so it doesn't violate RLS policy
+      const { error } = await supabase
         .from('event_leads')
         .insert([
           {
@@ -166,14 +166,16 @@ export default function QuestionnaireForm() {
             event_setting: form.eventSetting,
             number_of_people: parseInt(form.numberOfPeople),
             meal_options: form.mealOptions,
+            // Added marketplace meta
+            location: 'Hyderabad',
+            status: 'new'
           }
-        ])
-        .select();
+        ]);
 
       if (error) throw error;
 
-      // Success!
-      alert("Form submitted successfully! 🎉\n\nWe've received your event inquiry and will be in touch within 24 hours.");
+      // 🟢 BRANDING UPDATE: Better success message for Vowza
+      alert("Vowza! 🎉\n\nWe've received your details. Our top vendors in Hyderabad will be in touch shortly.");
 
       // Clear localStorage after successful submission
       localStorage.removeItem("eventForm");
@@ -224,6 +226,7 @@ export default function QuestionnaireForm() {
           onClick={() => navigate("/")}
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
         >
+          {/* 🟢 BRANDING UPDATE: Vowza Logo Text */}
           <div className="font-serif text-2xl md:text-3xl italic text-[#2d2d2d] tracking-wide">
             Vowza
           </div>
