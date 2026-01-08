@@ -1,0 +1,18 @@
+name: Supabase Keep Alive
+on:
+  schedule:
+    - cron: '0 0 * * 1,4' # Runs every Monday and Thursday at midnight UTC
+  workflow_dispatch:      # Allows manual trigger button in GitHub
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        run: |
+          curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/event_leads" \
+          -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+          -H "Content-Type: application/json" \
+          -H "Prefer: return=minimal" \
+          -d '{ "name": "SYSTEM_HEALTH_CHECK", "phone": "0000000000", "email": "admin@vowza.in", "event_type": "Health Check", "number_of_people": 1, "status": "archived" }'
