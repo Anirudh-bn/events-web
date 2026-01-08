@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "./lib/supabase";
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const steps = [
   "Your Info",
@@ -18,6 +19,7 @@ export default function QuestionnaireForm() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [captchaToken, setCaptchaToken] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -150,11 +152,12 @@ export default function QuestionnaireForm() {
   };
 
   const handleSubmit = async () => {
+    if (!captchaToken) return;
+
     setIsSubmitting(true);
     setSubmitError(null);
 
     try {
-      // 🟢 THE FIX: Removed .select() so it doesn't violate RLS policy
       const { error } = await supabase
         .from('event_leads')
         .insert([
@@ -166,15 +169,14 @@ export default function QuestionnaireForm() {
             event_setting: form.eventSetting,
             number_of_people: parseInt(form.numberOfPeople),
             meal_options: form.mealOptions,
-            // Added marketplace meta
             location: 'Hyderabad',
-            status: 'new'
+            status: 'new',
+            notes: '[Captcha Verified]'
           }
         ]);
 
       if (error) throw error;
 
-      // 🟢 BRANDING UPDATE: Better success message for Vowza
       alert("Vowza! 🎉\n\nWe've received your details. Our top vendors in Hyderabad will be in touch shortly.");
 
       // Clear localStorage after successful submission
@@ -192,6 +194,7 @@ export default function QuestionnaireForm() {
         mealOptions: []
       });
       setStep(0);
+      setCaptchaToken(null);
 
       // Navigate back to home
       setTimeout(() => navigate("/"), 2000);
@@ -226,7 +229,6 @@ export default function QuestionnaireForm() {
           onClick={() => navigate("/")}
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
         >
-          {/* 🟢 BRANDING UPDATE: Vowza Logo Text */}
           <div className="font-serif text-2xl md:text-3xl italic text-[#2d2d2d] tracking-wide">
             Vowza
           </div>
@@ -367,7 +369,7 @@ export default function QuestionnaireForm() {
                   <button
                     key={option.type}
                     onClick={() => handleEventTypeSelect(option.type)}
-                    className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${
+                    className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${ 
                       form.eventType === option.type
                         ? "bg-[#f5e6e0]/50 border-[#d4a373] shadow-sm"
                         : "border-[#f5e6e0] hover:border-[#d4a373]/50 bg-white"
@@ -386,7 +388,7 @@ export default function QuestionnaireForm() {
               <div className="space-y-4">
                 <button
                   onClick={() => handleEventSettingSelect("Indoor")}
-                  className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${
+                  className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${ 
                     form.eventSetting === "Indoor"
                       ? "bg-[#f5e6e0]/50 border-[#d4a373] shadow-sm"
                       : "border-[#f5e6e0] hover:border-[#d4a373]/50 bg-white"
@@ -402,7 +404,7 @@ export default function QuestionnaireForm() {
 
                 <button
                   onClick={() => handleEventSettingSelect("Outdoor")}
-                  className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${
+                  className={`border p-6 w-full text-left transition-all duration-200 transform hover:scale-[1.01] hover:shadow-md ${ 
                     form.eventSetting === "Outdoor"
                       ? "bg-[#f5e6e0]/50 border-[#d4a373] shadow-sm"
                       : "border-[#f5e6e0] hover:border-[#d4a373]/50 bg-white"
@@ -477,7 +479,7 @@ export default function QuestionnaireForm() {
                         setForm({ ...form, mealOptions: [...form.mealOptions, meal.name] });
                       }
                     }}
-                    className={`border p-5 w-full text-left transition-all duration-200 transform hover:scale-[1.01] ${
+                    className={`border p-5 w-full text-left transition-all duration-200 transform hover:scale-[1.01] ${ 
                       form.mealOptions.includes(meal.name)
                         ? "bg-[#f5e6e0]/50 border-[#d4a373] shadow-sm"
                         : "border-[#f5e6e0] hover:border-[#d4a373]/50 bg-white"
@@ -569,9 +571,16 @@ export default function QuestionnaireForm() {
                 </div>
 
                 <div className="bg-white border border-[#d4a373]/30 p-5 mt-6">
-                  <p className="text-sm text-[#5d5d5d] text-center font-light">
-                    You're all set! Click submit to complete your event inquiry.
+                  <p className="text-sm text-[#5d5d5d] text-center font-light mb-4">
+                    Please verify you are human to proceed.
                   </p>
+                  {/* Turnstile Widget */}
+                  <div className="flex justify-center">
+                    <Turnstile
+                      siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                      onSuccess={(token) => setCaptchaToken(token)}
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -594,7 +603,7 @@ export default function QuestionnaireForm() {
             {step < steps.length - 1 ? (
               <button
                 onClick={handleNext}
-                className={`px-8 py-3 border text-sm font-light transition-all duration-200 transform ${
+                className={`px-8 py-3 border text-sm font-light transition-all duration-200 transform ${ 
                   isNextDisabled()
                     ? "opacity-50 cursor-not-allowed border-[#f5e6e0] text-[#5d5d5d]"
                     : "border-[#2d2d2d] text-[#2d2d2d] hover:bg-[#2d2d2d] hover:text-white"
@@ -607,9 +616,11 @@ export default function QuestionnaireForm() {
             ) : (
               <button
                 onClick={handleSubmit}
-                disabled={isSubmitting}
-                className={`px-8 py-3 bg-[#2d2d2d] text-white border border-[#2d2d2d] font-light transition-all duration-200 transform hover:bg-[#d4a373] hover:border-[#d4a373] ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                disabled={isSubmitting || !captchaToken}
+                className={`px-8 py-3 bg-[#2d2d2d] text-white border border-[#2d2d2d] font-light transition-all duration-200 transform hover:bg-[#d4a373] hover:border-[#d4a373] ${ 
+                  isSubmitting || !captchaToken
+                    ? 'opacity-50 cursor-not-allowed'
+                    : ''
                 }`}
                 aria-label="Submit event inquiry"
               >
